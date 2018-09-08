@@ -1,5 +1,12 @@
 ##Docker image for jenkins
 
+
+Command to build the image
+
+```
+docker build -t biharimukund/jenkins .
+```
+
 Command to run the container:
 
 ```
