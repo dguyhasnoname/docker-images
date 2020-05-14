@@ -6,7 +6,9 @@ RUN apk add --no-cache \
           jq \
           bind-tools \
           curl \
-          openssh-client
+          openssh-client \
+          tree \ 
+          terraform
 
 ARG HELM_VERSION=3.1.2
 ARG KUBECTL_VERSION=1.18.0
@@ -17,7 +19,7 @@ ARG YAML_BIN_VERSION=3.3.0
 ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
 ENV BASE_URL="https://get.helm.sh"
 ENV TAR_FILE="helm-v${HELM_VERSION}-linux-amd64.tar.gz"
-RUN apk add --update --no-cache curl ca-certificates bash && \
+RUN apk add --update --no-cache ca-certificates  && \
     curl -L ${BASE_URL}/${TAR_FILE} |tar xvz && \
     mv linux-amd64/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
@@ -34,7 +36,6 @@ ENV PYTHONUNBUFFERED=1
 RUN echo "**** install Python ****" && \
     apk add --no-cache python3 && \
     if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi && \
-    \
     echo "**** install pip ****" && \
     python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
@@ -42,8 +43,7 @@ RUN echo "**** install Python ****" && \
     if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
 
 # Install kubectl (same version of aws esk)
-RUN apk add --update --no-cache curl && \
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
     mv kubectl /usr/bin/kubectl && \
     chmod +x /usr/bin/kubectl
 
